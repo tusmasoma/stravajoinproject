@@ -1,0 +1,81 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+    <!-- stylesheet-->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+  </head>
+  <body>
+    <!-- page-wrapper -->
+    <div class="page-wrapper">
+      <!-- header -->
+      <header class="header -wide">
+        <div class="header__container -tension_l">
+          <h1 class="header__title"><span class="-color_main">STRAVA</span> JOIN</h1>
+          <div class="header__subheader">
+            <ul class="header__navbar navbar">
+              <li class="navbar__item"><a href="{%url 'stravajoin:index'%}" class="navbar__link">TOP</a></li>
+              <li class="navbar__item"><a href="#" class="navbar__link">Contact</a></li>
+            </ul>
+            <a href="{%url 'accounts:logout'%}" class="btn-normal -ml32">ログアウト</a>
+          </div>
+        </div>
+      </header>
+      <!-- formatter -->
+      <div class="formatter -wide">
+        <!-- result -->
+        <section class="result -tension_xm -mb64">
+          <h2 class="result__title">結合結果</p><a href="{{file_obj.file.url}}" class="result__link link-default">{{file_obj.file.name}}</a>
+        </section>
+        <!-- process -->
+        <div class="process -tension_xm">
+          <h2 class="process__title">STRAVAへのアップロードの流れ</h2>
+          <!-- process-index -->
+          <nav class="process-index">
+            <ol class="process-index__list">
+              <li class="process-index__item"><span class="process-index__item-number">1.</span> <a href="#download" class="process-index__item-link">結合結果の保存</a></li>
+              <li class="process-index__item"><span class="process-index__item-number">2.</span> <a href="#remove" class="process-index__item-link">結合元の記録をSTRAVAから削除</a></li>
+              <li class="process-index__item"><span class="process-index__item-number">3.</span> <a href="#upload" class="process-index__item-link">STRAVAへアップロード</a></li>
+            </ol>
+          </nav>
+          <!-- download -->
+          <section class="process-step" id="download">
+            <h4 class="process-step__title">結合結果の保存</h4>
+            <p class="process-step__text">上のリンクから結合結果のファイルをお好きなフォルダに保存してください。</p>
+          </section>
+          <!-- remove -->
+          <section class="process-step" id="remove">
+            <h4 class="process-step__title">結合元の記録をSTRAVAから削除</h4>
+            <p class="process-step__text">
+              STRAVAを開き、結合する際に選んだ記録を全て削除してください。<br>
+              STRAVAでは同一時刻の記録を重複して持てないからです。<br>
+              ここで、別の場所にそれぞれの記録のgpxファイルを保存しておくことをおすすめします。<br>
+              削除の仕方は次の手順です。
+            </p>
+            <p class="process-step__text">[ダッシュボード] → 個々の記録のページへ → [削除]</p>
+            <img src="{% static 'image/step-remove.jpg'%}" alt="説明用画像" class="process-step__img">
+          </section>
+          <!-- upload -->
+          <section class="process-step" id="upload">
+            <h4 class="process-step__title">STRAVAへアップロード</h4>
+            <p class="process-step__text">結合結果のファイルを次の手順でアップロードします。</p>
+            <p class="process-step__text">[右上の＋をクリック] → [アクティビティをアップロード]</p>
+            <img src="{% static 'image/step-upload.jpg'%}" alt="説明用画像" class="process-step__img">
+            <p class="process-step__text">[ファイル] → [ファイル選択]で結合したファイルを選択 → [保存＆表示]</p>
+            <img src="{% static 'image/step-select.jpg'%}" alt="説明用画像" class="process-step__img">
+          </section>
+        </div>
+      </div>
+      <!-- footer -->
+      <footer class="footer -wide">
+        <div class="footer__container -tension_l">
+          <small>&copy; 2022 STRAVA JOIN (非公式)</small>
+        </div>
+      </footer>
+    </div>
+
+  </body>
+</html>

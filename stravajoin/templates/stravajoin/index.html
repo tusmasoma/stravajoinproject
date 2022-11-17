@@ -1,0 +1,92 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join</title>
+    <!-- stylesheet-->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+  </head>
+  <body>
+    <!-- page-wrapper -->
+    <div class="page-wrapper">
+      <!-- header -->
+      <header class="header -wide">
+        <div class="header__container -tension_l">
+          <h1 class="header__title"><span class="-color_main">STRAVA</span> JOIN</h1>
+          <div class="header__subheader">
+            <ul class="header__navbar navbar">
+              <li class="navbar__item"><a href="{%url 'stravajoin:index'%}" class="navbar__link">TOP</a></li>
+              <li class="navbar__item"><a href="" class="navbar__link">Contact</a></li>
+            </ul>
+            <a href="{%url 'accounts:logout'%}" class="btn-normal -ml32">ログアウト</a>
+          </div>
+        </div>
+      </header>
+      <!-- contents-formatter -->
+      <div class="contents-formatter -wide">
+        <!-- join -->
+        <form action="{%url 'stravajoin:join'%}" method="POST" class="join -tension_l">{%csrf_token%}
+          <!-- title -->
+          <div class="content-formatter">
+            <div class="join__title join-title">
+              <h2 class="join-title__body">結合したい記録を選ぼう</h2>
+            </div>
+          </div>
+          <!-- table -->
+          <div class="content-formatter">
+            <table class="join__table join-table table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>スポーツ名</th>
+                  <th>日付</th>
+                  <th>タイトル</th>
+                  <th>タイム</th>
+                  <th>距離</th>
+                  <th>標高</th>
+                  <th>サイズ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%for i,data in datalist%}
+                <tr data-id="{{i}}">
+                  <td><input type="checkbox" name="activitydata" class="join-table__checkbox" value="{{data.gpx_url}}"></td>
+                  <td>{{data.activity_type}}</td>
+                  <td>{{data.date}}</td>
+                  <td>{{data.title}}</td>
+                  <td>{{data.time}}</td>
+                  <td>{{data.dist}}</td>
+                  <td>{{data.elev}}</td>
+                  <td id="size-{{i}}">{{data.size}}MB</td>
+                </tr>
+                {%endfor%}
+              </tbody>
+            </table>
+          </div>
+          <!-- warning-oversize -->
+          <p class="join__warning-oversize -color_red -hidden">サイズがオーバーしています。</p>
+          <!-- btn-submit -->
+          <div class="content-formatter">
+            <button type="submit" class="join__btn-submit btn-main" disabled="true">結合</button>
+          </div>
+        </form>
+      </div>
+      <!-- loading -->
+      <div class="loading -hidden">
+        <canvas class="loading__canvas" width="150" height="150"></canvas>
+        <p class="loading__text">結合中<span class="loading__text-dot"></span></p>
+      </div>
+      <!-- footer -->
+      <footer class="footer -wide">
+        <div class="footer__container -tension_l">
+          <small>&copy; 2022 STRAVA JOIN (非公式)</small>
+        </div>
+      </footer>
+    </div>
+    
+    <script src="{% static 'js/table.js'%}"></script>
+    <script src="{% static 'js/loading.js'%}"></script>
+  </body>
+</html>

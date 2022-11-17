@@ -1,0 +1,76 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <!-- stylesheet-->
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    <!-- gsap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js"></script>
+  </head>
+  <body>
+    <!-- page-wrapper -->
+    <div class="page-wrapper">
+      <!-- header -->
+      <header class="header -wide">
+        <div class="header__container -tension_l">
+          <h1 class="header__title"><span class="-color_main">STRAVA</span> JOIN</h1>
+          <div class="header__subheader">
+            <a href="{%url 'accounts:signup'%}" class="btn-normal -ml32">登録</a>
+          </div>
+        </div>
+      </header>
+      <!-- contents-formatter -->
+      <div class="contents-formatter -wide">
+        <div class="circles-and-form-wrapper -tension_m">
+          <!-- circles -->
+          <div class="circles">
+            <div class="circle-from-left circle"></div>
+            <div class="circle-from-right circle"></div>
+          </div>
+          <!-- form-wrapper -->
+          <div class="form-wrapper">
+            <!-- form -->
+            <!-- login -->
+            <form action="{%url 'accounts:login'%}" method="POST" class="form login">{%csrf_token%}
+              <h2 class="form__title -mb32">STRAVAのメールアドレスとパスワードで<br>ログインしよう</h2>
+              <div class="-mb24">
+                <p>メールアドレス</p>
+                <input type="email" name="email" placeholder="email" class="login__input-email form__input input-main">
+                <p class="login__warning-email -color_red -hidden">メールアドレスが間違っています。</p>
+              </div>
+              <div class="-mb32">
+                <div>
+                  <p>パスワード</p>
+                  <input type="password" name="password" placeholder="password" class="login__input-password form__input input-main">
+                </div>
+                <p class="login__warning-password -color_red -hidden">パスワードが間違っています。</p>
+              </div>
+              {%if loginDenied%}
+              <p class="login__warning-login -color_red -mb32">ログインに失敗しました。</p>
+              {%endif%}
+              <button type="submit" class="login__btn-submit form__btn-submit btn-normal">ログイン</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- loading -->
+      <div class="loading -hidden">
+        <canvas class="loading__canvas" width="150" height="150"></canvas>
+        <p class="loading__text">ログイン中<span class="loading__text-dot"></span></p>
+      </div>
+      <!-- footer -->
+      <footer class="footer -wide">
+        <div class="footer__container -tension_l">
+          <small>&copy; 2022 STRAVA JOIN (非公式)</small>
+        </div>
+      </footer>
+    </div>
+    
+    <script src="{% static 'js/animation.js'%}"></script>
+    <script src="{% static 'js/login.js'%}"></script>
+    <script src="{% static 'js/loading.js'%}"></script>
+  </body>
+</html>
