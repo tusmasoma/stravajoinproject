@@ -47,25 +47,36 @@ class StravaJoin:
                 print(fileurl)
                 if count == 0:
                     with open(fileurl,'r+',encoding='utf-8') as fr:
-                        text=fr.read()
-                        text=re.sub(r'<name>.+</name>','<name>ride</name>',text)
-                        code=re.sub(r'</trkseg>\s*</trk>\s*</gpx>','',text)
-                        print(code,file=fa)      
+                        self.write_first(fr,fa)   
                 elif 0< count < len(self.data_list)-1:
                     with open(fileurl,'r+',encoding='utf-8') as fr:
-                        text=fr.read()
-                        code=re.search(r'<trkseg>((.|\s)*)</trkseg>',text).group(1)
-                        print(code,file=fa)
+                        self.write_trkseg(fr,fa)
                 else:
                     with open(fileurl,'r+',encoding='utf-8') as fr:
-                        text=fr.read()
-                        code=re.search(r'<trkseg>((.|\s)*)</trkseg>',text).group(1)
-                        print(code,file=fa)
+                        self.write_trkseg(fr,fa)
                         print('</trkseg></trk></gpx>',file=fa)
             
             GpxJoinFile.objects.create(user=self.request.user,file=File(fa))
         
         os.remove(os.path.abspath(self.instance.filename))
+    
+    def write_first(self,fr,fa):
+        trkseg_bool=True
+        for line in fr:
+            if '<name>' in line:
+                line=re.sub(r'<name>.+</name>','<name>ride</name>',line)
+            if '</trkseg>' in line:
+                trkseg_bool=False
+            if trkseg_bool:
+                print(line,file=fa)
+    
+    def write_trkseg(self,fr,fa):
+        trkseg_bool=False
+        for line in fr:
+            if 'trkseg' in line:
+                trkseg_bool=not trkseg_bool
+            if trkseg_bool and not ('trkseg' in line):
+                print(line,file=fa)
 
 
 
