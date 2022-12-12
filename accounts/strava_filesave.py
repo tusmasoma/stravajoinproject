@@ -29,11 +29,20 @@ class SaveGpxFile:
             filename=re.search(r'https://www.strava.com/activities/([0-9]+)/export_gpx',self.data.gpx_url).group(1)+'.gpx'
 
             with open(filename,"w+", encoding="utf-8") as f:
-                    
-                gpxfile=self.session.get(self.data.gpx_url)
-                f.write(gpxfile.text)
 
-                timedata=re.search(r'<metadata>\s*<time>(.*)</time>\s*</metadata>',gpxfile.text).group(1)
+                gpxfile=self.session.get(self.data.gpx_url,stream=True)
+
+                metadata_bool=False
+                for chunk in gpxfile.iter_content(chunk_size=1024,decode_unicode=True):
+                    chunk=chunk.decode('utf-8')
+                    if chunk:
+                        if '<metadata>' in chunk:
+                            metadata_bool=True
+                        if metadata_bool and '<time>' in chunk:
+                            timedata=re.search(r'<metadata>\s*<time>(.*)</time>\s*</metadata>',chunk).group(1)
+                            metadata_bool=False
+                        
+                        f.write(chunk)
                 gpxurl_obj.save() #gpxurlだけ保存され、gpxfileが保存されない場合があるので、保存のタイミングを同じにする
                 GpxFile.objects.create(url=gpxurl_obj,file=File(f),time=timedata)
                     
