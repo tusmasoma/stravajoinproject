@@ -38,9 +38,23 @@ Stravaというアプリで、複数のアクティビティを一つのアク�
 Stravaからアクティビティデータをスクレイピングする必要があるため、Pythonのようにウェブスクレイピングに役立つ豊富なライブラリやモジュールがある言語を使用することにしました。
 
 ## 工夫点
-- 20MB前後のファイル処理を行う際に、なるべくメモリの消費を抑え、実効速度の速くなるようにアルゴリズムを書きました。
+- 20MB前後のファイル処理を行う際に、なるべくメモリの消費を抑えるために、readメソッドで一気にファイルを読み込むのではなく、以下のように1024byteづつ読み込むようにしました。
 ```
-git status
-git add
-git commit
+ with open(filename,"w+", encoding="utf-8") as f:
+
+                gpxfile=self.session.get(self.data.gpx_url,stream=True)
+
+                metadata_bool=False
+                for chunk in gpxfile.iter_content(chunk_size=1024,decode_unicode=True):
+                    chunk=chunk.decode('utf-8')
+                    if chunk:
+                        if '<metadata>' in chunk:
+                            metadata_bool=True
+                        if metadata_bool and '<time>' in chunk:
+                            timedata=re.search(r'<metadata>\s*<time>(.*)</time>\s*</metadata>',chunk).group(1)
+                            metadata_bool=False
+                        
+                        f.write(chunk)
+                gpxurl_obj.save() #gpxurlだけ保存され、gpxfileが保存されない場合があるので、保存のタイミングを同じにする
+                GpxFile.objects.create(url=gpxurl_obj,file=File(f),time=timedata)
 ```
